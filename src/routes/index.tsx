@@ -98,7 +98,8 @@ function Index() {
       </section>
 
       <section className="mx-auto max-w-6xl px-5 py-20">
-        <h2 className="text-center font-display text-4xl uppercase">Kumonekta kay Matt</h2>
+        <img src={logoDerim.url} alt="AMEN – Arts of Matt Estrella Network" className="mx-auto w-full max-w-sm drop-shadow-[0_12px_24px_rgba(30,58,138,0.18)]" />
+        <h2 className="mt-8 text-center font-display text-4xl uppercase">Kumonekta kay Matt</h2>
         <div className="mt-10">
           <Socials />
         </div>
