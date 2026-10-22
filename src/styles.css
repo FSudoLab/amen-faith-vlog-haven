@@ -127,6 +127,9 @@
   background: repeating-conic-gradient(from 0deg at 50% 0%, color-mix(in oklab, white 35%, transparent) 0deg 6deg, transparent 6deg 18deg);
   mask-image: radial-gradient(ellipse at 50% 0%, black 0%, transparent 70%);
 }
+@utility halo-glow {
+  background: radial-gradient(circle, color-mix(in oklab, white 55%, var(--halo)) 0%, transparent 68%);
+}
 
 @keyframes matt-sway {
   0%,
