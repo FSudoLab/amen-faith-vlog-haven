@@ -62,24 +62,24 @@ function Vlogs() {
         )}
 
         {vlogs.length === 0 && <p className="text-center text-muted-foreground">Wala pang vlogs.</p>}
-        <div className="mx-auto flex max-w-3xl flex-col gap-10">
+        <div className="flex flex-col gap-8">
           {vlogs.map((v) => {
             const embed = toEmbed(v.videoUrl);
             return (
-              <article key={v.id} className="overflow-hidden rounded-2xl border border-border bg-card shadow-holy">
-                <h3 className="px-6 pt-6 text-center font-display text-2xl uppercase md:text-3xl">{v.title}</h3>
-                <div className="mt-5 aspect-video bg-heaven">
+              <article key={v.id} className="overflow-hidden rounded-2xl border border-border bg-card shadow-holy md:grid md:grid-cols-[1.5fr_1fr] md:items-center">
+                <div className="aspect-video bg-heaven">
                   {embed ? (
                     <iframe src={embed} title={v.title} className="h-full w-full" allowFullScreen />
                   ) : (
                     <div className="flex h-full items-center justify-center font-display text-5xl text-primary/70">AMEN</div>
                   )}
                 </div>
-                <div className="px-6 pb-6 pt-5 text-center">
-                  <p className="text-sm leading-relaxed text-muted-foreground">{v.description}</p>
+                <div className="px-6 py-6 md:px-8">
+                  <h3 className="font-display text-2xl uppercase md:text-3xl">{v.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{v.description}</p>
                   <p className="mt-4 text-xs uppercase tracking-widest text-muted-foreground/80">{v.date}</p>
                   {admin && (
-                    <div className="mt-4 flex justify-center gap-2 text-sm">
+                    <div className="mt-4 flex gap-2 text-sm">
                       <button onClick={() => { setEditId(v.id); setForm({ title: v.title, description: v.description, videoUrl: v.videoUrl, date: v.date }); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="rounded-full bg-secondary px-4 py-1.5">
                         Edit
                       </button>
