@@ -1,5 +1,11 @@
+// ============= Vlogs page =============
+// Layout: intro on the left 1/3, vlog boxes on the right 2/3 (title / image /
+// description / date), and the Santo Niño peeking in from the right edge with
+// its head at the 3 o'clock position.
+
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import santo from "@/assets/santo-nino.png.asset.json";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { toEmbed, useAdmin, useVlogs, type Vlog } from "@/lib/vlogs";
 
@@ -36,13 +42,23 @@ function Vlogs() {
   return (
     <div className="min-h-screen">
       <SiteHeader />
+
+      {/* Santo Niño peeking in from the right edge, head at 3 o'clock */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed right-0 top-[44%] z-30 hidden w-[230px] translate-x-[26%] md:block"
+      >
+        <div className="halo-glow absolute -inset-14 opacity-70" />
+        <img src={santo.url} alt="" className="relative w-full drop-shadow-[0_18px_40px_rgba(0,0,0,0.35)]" />
+      </div>
+
       <section className="relative overflow-hidden bg-heaven py-16 text-center">
         <div className="rays pointer-events-none absolute inset-0" />
         <h1 className="relative font-display text-5xl uppercase md:text-6xl">Vlogs</h1>
         <p className="relative mt-3 text-muted-foreground">Mga kwento ng pananampalataya, pag-asa at pagkakaisa</p>
       </section>
 
-      <div className="mx-auto max-w-6xl px-5 py-14">
+      <div className="mx-auto max-w-6xl px-5 py-14 md:pr-[170px]">
         {admin && (
           <form onSubmit={submit} className="mb-12 grid gap-3 rounded-2xl border border-border bg-card p-6 shadow-holy md:grid-cols-2">
             <h2 className="font-display text-2xl uppercase md:col-span-2">{editId ? "Edit vlog" : "New vlog"}</h2>
@@ -61,23 +77,31 @@ function Vlogs() {
           </form>
         )}
 
-        {vlogs.length === 0 && <p className="text-center text-muted-foreground">Wala pang vlogs.</p>}
-        <div className="flex flex-col gap-8">
-          {vlogs.map((v) => {
-            const embed = toEmbed(v.videoUrl);
-            return (
-              <article key={v.id} className="overflow-hidden rounded-2xl border border-border bg-card shadow-holy md:grid md:grid-cols-[1.5fr_1fr] md:items-center">
-                <div className="aspect-video bg-heaven">
-                  {embed ? (
-                    <iframe src={embed} title={v.title} className="h-full w-full" allowFullScreen />
-                  ) : (
-                    <div className="flex h-full items-center justify-center font-display text-5xl text-primary/70">AMEN</div>
-                  )}
-                </div>
-                <div className="px-6 py-6 md:px-8">
+        <div className="grid gap-10 md:grid-cols-[1fr_2fr]">
+          <aside className="md:sticky md:top-24 md:self-start">
+            <p className="font-display text-xs uppercase tracking-[0.3em] text-primary/70">AMEN Vlogs</p>
+            <h2 className="mt-2 font-display text-2xl uppercase leading-tight">Mga Kwento ng Pananampalataya</h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Panoorin ang mga vlog ni Matt — mga kwento ng pananampalataya, pag-asa at pagkakaisa para sa bawat Kapanalig.
+            </p>
+          </aside>
+
+          <div className="flex flex-col gap-8">
+            {vlogs.length === 0 && <p className="text-center text-muted-foreground">Wala pang vlogs.</p>}
+            {vlogs.map((v) => {
+              const embed = toEmbed(v.videoUrl);
+              return (
+                <article key={v.id} className="rounded-2xl border border-border bg-card p-6 shadow-holy">
                   <h3 className="font-display text-2xl uppercase md:text-3xl">{v.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{v.description}</p>
-                  <p className="mt-4 text-xs uppercase tracking-widest text-muted-foreground/80">{v.date}</p>
+                  <div className="mt-4 aspect-video overflow-hidden rounded-xl bg-heaven">
+                    {embed ? (
+                      <iframe src={embed} title={v.title} className="h-full w-full" allowFullScreen />
+                    ) : (
+                      <div className="flex h-full items-center justify-center font-display text-5xl text-primary/70">AMEN</div>
+                    )}
+                  </div>
+                  <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{v.description}</p>
+                  <p className="mt-3 text-xs uppercase tracking-widest text-muted-foreground/80">{v.date}</p>
                   {admin && (
                     <div className="mt-4 flex gap-2 text-sm">
                       <button onClick={() => { setEditId(v.id); setForm({ title: v.title, description: v.description, videoUrl: v.videoUrl, date: v.date }); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="rounded-full bg-secondary px-4 py-1.5">
@@ -88,10 +112,10 @@ function Vlogs() {
                       </button>
                     </div>
                   )}
-                </div>
-              </article>
-            );
-          })}
+                </article>
+              );
+            })}
+          </div>
         </div>
       </div>
       <SiteFooter />
