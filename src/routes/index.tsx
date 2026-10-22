@@ -37,24 +37,26 @@ function Index() {
 
       <section className="relative flex min-h-[85vh] flex-col overflow-hidden bg-heaven">
         <div className="rays pointer-events-none absolute inset-0" />
-        <div className="relative mx-auto max-w-3xl px-5 pt-12 text-center md:pt-16">
-          <p className="font-display text-3xl leading-snug md:text-4xl">
-            “Para sa mas malawak na misyon ng bawat Kapanalig sa karangalan ng Poong Maykapal”
-          </p>
-          <p className="mt-4 text-muted-foreground">
-            For the greater mission of every Fellow Believer in the honor and glory of the Almighty God
-          </p>
-          <Link to="/vlogs" className="mt-8 inline-block rounded-full bg-primary px-8 py-4 font-display uppercase text-primary-foreground shadow-holy">
-            Panoorin ang Vlogs
-          </Link>
-        </div>
-        <div className="relative mt-auto w-full pt-8">
-          <div className="pointer-events-none absolute bottom-0 left-1/2 h-2/3 w-2/3 -translate-x-1/2 rounded-full bg-halo/50 blur-3xl" />
-          <img
-            src={mattHero.url}
-            alt="Matt Estrella with the Santo Niño"
-            className="matt-sway mx-auto block w-full max-w-[40rem] drop-shadow-[0_25px_35px_rgba(30,58,138,0.25)]"
-          />
+        <div className="relative mx-auto grid w-full max-w-6xl flex-1 grid-cols-1 items-end gap-10 px-5 pt-12 md:grid-cols-[1fr_1.1fr] md:gap-6 md:pt-16">
+          <div className="max-w-xl self-center text-left">
+            <p className="font-display text-3xl leading-snug md:text-4xl">
+              “Para sa mas malawak na misyon ng bawat Kapanalig sa karangalan ng Poong Maykapal”
+            </p>
+            <p className="mt-4 text-muted-foreground">
+              For the greater mission of every Fellow Believer in the honor and glory of the Almighty God
+            </p>
+            <Link to="/vlogs" className="mt-8 inline-block rounded-full bg-primary px-8 py-4 font-display uppercase text-primary-foreground shadow-holy">
+              Panoorin ang Vlogs
+            </Link>
+          </div>
+          <div className="relative">
+            <div className="pointer-events-none absolute bottom-0 right-0 h-2/3 w-2/3 rounded-full bg-halo/50 blur-3xl" />
+            <img
+              src={mattHero.url}
+              alt="Matt Estrella with the Santo Niño"
+              className="matt-sway relative ml-auto block w-full max-w-[40rem] drop-shadow-[0_25px_35px_rgba(30,58,138,0.25)]"
+            />
+          </div>
         </div>
       </section>
 
