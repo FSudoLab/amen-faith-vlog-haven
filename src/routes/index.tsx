@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import logoDerim from "@/assets/amen-logo-derim.png.asset.json";
 import mattHero from "@/assets/matt-hero.png.asset.json";
 import { SiteFooter, SiteHeader, Socials } from "@/components/SiteHeader";
 
