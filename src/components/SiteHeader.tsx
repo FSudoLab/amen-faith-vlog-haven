@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { SiInstagram, SiTiktok, SiX, SiYoutube } from "react-icons/si";
-import logo from "@/assets/amen-logo.png.asset.json";
+import logo from "@/assets/amen-logo-clean.png.asset.json";
 import { useAdmin } from "@/lib/vlogs";
 
 export function SiteHeader() {
@@ -9,7 +9,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
         <Link to="/" className="flex items-center">
-          <img src={logo.url} alt="AMEN - Arts of Matt Estrella Network" className="h-12 rounded-md mix-blend-multiply" />
+          <img src={logo.url} alt="AMEN - Arts of Matt Estrella Network" className="h-12" />
         </Link>
         <nav className="flex items-center gap-2 font-display text-sm uppercase tracking-wide">
           <Link to="/" className="rounded-full px-4 py-2 hover:bg-gold-soft" activeOptions={{ exact: true }} activeProps={{ className: "bg-gold" }}>
