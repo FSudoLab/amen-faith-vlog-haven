@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { SiInstagram, SiTiktok, SiX, SiYoutube } from "react-icons/si";
 import logo from "@/assets/amen-logo.png.asset.json";
 import { useAdmin } from "@/lib/vlogs";
 
@@ -33,10 +34,10 @@ export function SiteHeader() {
 }
 
 const socials = [
-  { name: "Instagram", handle: "@matthewmatics19", href: "https://instagram.com/matthewmatics19" },
-  { name: "YouTube", handle: "@matthewmatics19", href: "https://youtube.com/@matthewmatics19" },
-  { name: "X (Twitter)", handle: "@matthewmatics19", href: "https://x.com/matthewmatics19" },
-  { name: "TikTok", handle: "@matthewmatics", href: "https://tiktok.com/@matthewmatics" },
+  { name: "Instagram", handle: "@matthewmatics19", href: "https://instagram.com/matthewmatics19", icon: SiInstagram },
+  { name: "YouTube", handle: "@matthewmatics19", href: "https://youtube.com/@matthewmatics19", icon: SiYoutube },
+  { name: "X (Twitter)", handle: "@matthewmatics19", href: "https://x.com/matthewmatics19", icon: SiX },
+  { name: "TikTok", handle: "@matthewmatics", href: "https://tiktok.com/@matthewmatics", icon: SiTiktok },
 ];
 
 export function Socials() {
@@ -44,7 +45,10 @@ export function Socials() {
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {socials.map((s) => (
         <a key={s.name} href={s.href} target="_blank" rel="noreferrer" className="rounded-2xl bg-primary p-6 text-primary-foreground shadow-holy transition hover:-translate-y-1">
-          <p className="font-display text-xl uppercase text-gold">{s.name}</p>
+          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gold-soft">
+            <s.icon className="h-6 w-6 text-primary" aria-hidden />
+          </span>
+          <p className="mt-4 font-display text-xl uppercase text-gold">{s.name}</p>
           <p className="mt-1 opacity-90">{s.handle}</p>
         </a>
       ))}
