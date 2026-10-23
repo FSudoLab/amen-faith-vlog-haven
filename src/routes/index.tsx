@@ -67,7 +67,7 @@ function Index() {
         <div className="relative mx-auto max-w-5xl px-5">
           <video
             src={poon.url}
-            className="w-full rounded-2xl border border-border bg-black shadow-holy"
+            className="aspect-video w-full rounded-2xl border border-border bg-black object-contain shadow-holy"
             controls
             autoPlay
             muted
