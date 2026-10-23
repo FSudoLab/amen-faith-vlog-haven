@@ -42,6 +42,9 @@ function SolidKapanaligsPage() {
   const bronze = sorted.find((k) => k.rankNumber === 3);
   const runnersUp = sorted.filter((k) => k.rankNumber > 3);
 
+  // If there are no 2 and 3, put 1st on the left side (md:order-1)
+  const hasSilverOrBronze = Boolean(silver || bronze);
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
@@ -84,52 +87,13 @@ function SolidKapanaligsPage() {
           </div>
 
           <div className="grid gap-6 md:grid-cols-3 items-end">
-            {/* 🥈 2nd PLACE - SILVER */}
-            {silver ? (
-              <div className="order-2 md:order-1 relative rounded-3xl border-2 border-slate-300 dark:border-slate-700 bg-gradient-to-b from-slate-100/90 via-card to-slate-200/50 dark:from-slate-900/60 dark:to-card p-6 text-center shadow-lg hover:-translate-y-1 transition duration-300">
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-slate-400 via-gray-200 to-slate-400 px-4 py-1 text-xs font-black uppercase tracking-wider text-slate-900 shadow-md">
-                  <Medal className="h-4 w-4" /> 2nd Place · Silver
-                </div>
-
-                <div className="mt-4 relative mx-auto h-28 w-28">
-                  <img
-                    src={
-                      silver.avatarUrl ||
-                      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80"
-                    }
-                    alt={silver.name}
-                    className="h-28 w-28 rounded-full object-cover ring-4 ring-slate-300 ring-offset-4 ring-offset-background shadow-md"
-                  />
-                  <div className="absolute -bottom-2 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-slate-300 font-display font-black text-slate-800 shadow">
-                    2
-                  </div>
-                </div>
-
-                <h3 className="mt-5 font-display text-2xl uppercase tracking-wide text-foreground">
-                  {silver.name}
-                </h3>
-                {silver.badge && (
-                  <span className="mt-1 inline-block rounded-full bg-slate-200 dark:bg-slate-800 px-3 py-0.5 text-xs font-semibold text-slate-700 dark:text-slate-300">
-                    {silver.badge}
-                  </span>
-                )}
-                <p className="mt-3 text-xs leading-relaxed text-muted-foreground line-clamp-3">
-                  "{silver.bio || "Tapat na naglilingkod at kaagapay sa mga panalangin."}"
-                </p>
-                <div className="mt-4 pt-3 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
-                  <span className="flex items-center gap-1">
-                    <Heart className="h-3.5 w-3.5 text-red-400 fill-red-400" /> Kapanalig
-                  </span>
-                  <span>{silver.month}</span>
-                </div>
-              </div>
-            ) : (
-              <EmptyPodiumSlot rank={2} title="2nd Place · Silver" />
-            )}
-
-            {/* 🥇 1st PLACE - GOLD (Center) */}
+            {/* 🥇 1st PLACE - GOLD (Always order-1 on mobile so it is at the TOP; on desktop: md:order-1 (left) if no 2 & 3, or md:order-2 (center) if 2 or 3 exist) */}
             {gold ? (
-              <div className="order-1 md:order-2 relative rounded-3xl border-2 border-amber-400 bg-gradient-to-b from-amber-100/90 via-card to-yellow-100/70 dark:from-amber-950/70 dark:to-card p-7 text-center shadow-2xl hover:-translate-y-1.5 transition duration-300 md:-translate-y-3">
+              <div
+                className={`order-1 ${
+                  hasSilverOrBronze ? "md:order-2 md:-translate-y-3" : "md:order-1"
+                } relative rounded-3xl border-2 border-amber-400 bg-gradient-to-b from-amber-100/90 via-card to-yellow-100/70 dark:from-amber-950/70 dark:to-card p-7 text-center shadow-2xl hover:-translate-y-1.5 transition duration-300`}
+              >
                 <div className="absolute -top-5 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 px-5 py-1.5 text-xs font-black uppercase tracking-wider text-amber-950 shadow-xl ring-2 ring-amber-300 animate-pulse">
                   <Crown className="h-4 w-4 text-amber-950" /> 1st Place · Gold Solid
                   <Sparkles className="h-3.5 w-3.5" />
@@ -169,12 +133,71 @@ function SolidKapanaligsPage() {
                 </div>
               </div>
             ) : (
-              <EmptyPodiumSlot rank={1} title="1st Place · Gold" />
+              <EmptyPodiumSlot
+                rank={1}
+                title="1st Place · Gold"
+                className={`order-1 ${
+                  hasSilverOrBronze ? "md:order-2 md:-translate-y-3" : "md:order-1"
+                }`}
+              />
             )}
 
-            {/* 🥉 3rd PLACE - BRONZE */}
+            {/* 🥈 2nd PLACE - SILVER (order-2 on mobile, on desktop: md:order-1 (left) if 2 or 3 exist, or md:order-2 (middle) if no other) */}
+            {silver ? (
+              <div
+                className={`order-2 ${
+                  hasSilverOrBronze ? "md:order-1" : "md:order-2"
+                } relative rounded-3xl border-2 border-slate-300 dark:border-slate-700 bg-gradient-to-b from-slate-100/90 via-card to-slate-200/50 dark:from-slate-900/60 dark:to-card p-6 text-center shadow-lg hover:-translate-y-1 transition duration-300`}
+              >
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-slate-400 via-gray-200 to-slate-400 px-4 py-1 text-xs font-black uppercase tracking-wider text-slate-900 shadow-md">
+                  <Medal className="h-4 w-4" /> 2nd Place · Silver
+                </div>
+
+                <div className="mt-4 relative mx-auto h-28 w-28">
+                  <img
+                    src={
+                      silver.avatarUrl ||
+                      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80"
+                    }
+                    alt={silver.name}
+                    className="h-28 w-28 rounded-full object-cover ring-4 ring-slate-300 ring-offset-4 ring-offset-background shadow-md"
+                  />
+                  <div className="absolute -bottom-2 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-slate-300 font-display font-black text-slate-800 shadow">
+                    2
+                  </div>
+                </div>
+
+                <h3 className="mt-5 font-display text-2xl uppercase tracking-wide text-foreground">
+                  {silver.name}
+                </h3>
+                {silver.badge && (
+                  <span className="mt-1 inline-block rounded-full bg-slate-200 dark:bg-slate-800 px-3 py-0.5 text-xs font-semibold text-slate-700 dark:text-slate-300">
+                    {silver.badge}
+                  </span>
+                )}
+                <p className="mt-3 text-xs leading-relaxed text-muted-foreground line-clamp-3">
+                  "{silver.bio || "Tapat na naglilingkod at kaagapay sa mga panalangin."}"
+                </p>
+                <div className="mt-4 pt-3 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1">
+                    <Heart className="h-3.5 w-3.5 text-red-400 fill-red-400" /> Kapanalig
+                  </span>
+                  <span>{silver.month}</span>
+                </div>
+              </div>
+            ) : (
+              <EmptyPodiumSlot
+                rank={2}
+                title="2nd Place · Silver"
+                className={`order-2 ${
+                  hasSilverOrBronze ? "md:order-1" : "md:order-2"
+                }`}
+              />
+            )}
+
+            {/* 🥉 3rd PLACE - BRONZE (order-3 on mobile, md:order-3 on desktop) */}
             {bronze ? (
-              <div className="order-3 relative rounded-3xl border-2 border-amber-600/70 dark:border-amber-700 bg-gradient-to-b from-amber-100/60 via-card to-orange-100/40 dark:from-amber-950/50 dark:to-card p-6 text-center shadow-lg hover:-translate-y-1 transition duration-300">
+              <div className="order-3 md:order-3 relative rounded-3xl border-2 border-amber-600/70 dark:border-amber-700 bg-gradient-to-b from-amber-100/60 via-card to-orange-100/40 dark:from-amber-950/50 dark:to-card p-6 text-center shadow-lg hover:-translate-y-1 transition duration-300">
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-amber-700 via-amber-600 to-orange-700 px-4 py-1 text-xs font-black uppercase tracking-wider text-white shadow-md">
                   <Award className="h-4 w-4" /> 3rd Place · Bronze
                 </div>
@@ -212,7 +235,11 @@ function SolidKapanaligsPage() {
                 </div>
               </div>
             ) : (
-              <EmptyPodiumSlot rank={3} title="3rd Place · Bronze" />
+              <EmptyPodiumSlot
+                rank={3}
+                title="3rd Place · Bronze"
+                className="order-3 md:order-3"
+              />
             )}
           </div>
         </section>
@@ -296,9 +323,19 @@ function SolidKapanaligsPage() {
   );
 }
 
-function EmptyPodiumSlot({ rank, title }: { rank: number; title: string }) {
+function EmptyPodiumSlot({
+  rank,
+  title,
+  className = "",
+}: {
+  rank: number;
+  title: string;
+  className?: string;
+}) {
   return (
-    <div className="rounded-3xl border-2 border-dashed border-border bg-card/40 p-6 text-center">
+    <div
+      className={`rounded-3xl border-2 border-dashed border-border bg-card/40 p-6 text-center ${className}`}
+    >
       <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-muted text-muted-foreground font-display text-2xl font-bold">
         #{rank}
       </div>
