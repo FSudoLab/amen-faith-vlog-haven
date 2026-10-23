@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import logoClean from "@/assets/amen-logo-clean.png.asset.json";
 import mattHero from "@/assets/matt-hero.png.asset.json";
+import poon from "@/assets/poon.mp4.asset.json";
 import { SiteFooter, SiteHeader, Socials } from "@/components/SiteHeader";
 
 export const Route = createFileRoute("/")({
@@ -58,6 +59,21 @@ function Index() {
               className="matt-sway relative ml-auto block w-full max-w-[40rem] drop-shadow-[0_25px_35px_rgba(30,58,138,0.25)]"
             />
           </div>
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden bg-heaven py-16">
+        <div className="rays pointer-events-none absolute inset-0" />
+        <div className="relative mx-auto max-w-5xl px-5">
+          <video
+            src={poon.url}
+            className="w-full rounded-2xl border border-border bg-black shadow-holy"
+            controls
+            autoPlay
+            muted
+            loop
+            playsInline
+          />
         </div>
       </section>
 
