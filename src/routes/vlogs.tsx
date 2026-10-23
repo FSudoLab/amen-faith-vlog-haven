@@ -1,6 +1,7 @@
 // ============= Vlogs page =============
 // Layout: vlog boxes (title / image / description / date) fill the right side at
-// max width, and the Santo Niño stands big on the LEFT edge, head at 3 o'clock.
+// max width, and the Santo Niño stands big on the LEFT edge, head at the 1:30
+// clock position (45deg clockwise from upright).
 
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
