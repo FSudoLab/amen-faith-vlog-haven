@@ -77,8 +77,8 @@ function Vlogs() {
           </form>
         )}
 
-        <div className="grid gap-10 md:grid-cols-[1fr_2fr]">
-          <aside className="md:sticky md:top-24 md:self-start">
+        <div className="grid gap-10 md:grid-cols-[0.8fr_2.2fr] md:items-center">
+          <aside className="md:sticky md:top-24">
             <p className="font-display text-xs uppercase tracking-[0.3em] text-primary/70">AMEN Vlogs</p>
             <h2 className="mt-2 font-display text-2xl uppercase leading-tight">Mga Kwento ng Pananampalataya</h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
