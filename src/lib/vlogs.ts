@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase, isSupabaseConfigured } from "./supabase";
+import { supabase } from "./supabase";
 
 export type Vlog = {
   id: string;
@@ -21,7 +21,6 @@ type DbVlog = {
   date?: string | null;
 };
 
-const KEY = "amen-vlogs";
 const AUTH = "amen-admin";
 
 // Pre-made creator credentials
@@ -30,89 +29,74 @@ export const PREMADE_CREDENTIALS = {
   password: "Password*123",
 };
 
-const seed: Vlog[] = [
-  {
-    id: "1",
-    title: "Simbang Gabi Diaries",
-    description: "Isang gabi ng panalangin at pagkakaisa kasama ang mga kapanalig.",
-    videoUrl: "",
-    date: "2026-10-01",
-  },
-  {
-    id: "2",
-    title: "Alab ng Pananampalataya",
-    description: "Mga kwento ng pag-asa mula sa ating komunidad.",
-    videoUrl: "",
-    date: "2026-09-15",
-  },
-];
-
-function read(): Vlog[] {
-  if (typeof window === "undefined") return seed;
-  const raw = localStorage.getItem(KEY);
-  if (!raw) return seed;
-  try {
-    return JSON.parse(raw);
-  } catch {
-    return seed;
-  }
-}
-
 export function useVlogs() {
   const [vlogs, setVlogs] = useState<Vlog[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchVlogs = async () => {
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { data, error } = await supabase
-          .from("vlogs")
-          .select("*")
-          .order("date", { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from("vlogs")
+        .select("*")
+        .order("created_at", { ascending: false });
 
-        if (!error && data && data.length > 0) {
-          const mapped: Vlog[] = data.map((d: DbVlog) => ({
-            id: String(d.id),
-            title: d.title,
-            description: d.description || "",
-            videoUrl: d.video_url || d.videoUrl || "",
-            imageUrl: d.image_url || d.imageUrl || "",
-            date: d.date || new Date().toISOString().slice(0, 10),
-          }));
-          setVlogs(mapped);
-          return;
-        }
-      } catch (err) {
-        console.warn("Could not load from Supabase table, using local storage:", err);
+      if (!error && data) {
+        const mapped: Vlog[] = data.map((d: DbVlog) => ({
+          id: String(d.id),
+          title: d.title,
+          description: d.description || "",
+          videoUrl: d.video_url || d.videoUrl || "",
+          imageUrl: d.image_url || d.imageUrl || "",
+          date: d.date || new Date().toISOString().slice(0, 10),
+        }));
+        setVlogs(mapped);
       }
+    } catch (err) {
+      console.error("Failed to load vlogs from Supabase:", err);
+    } finally {
+      setLoading(false);
     }
-    setVlogs(read());
   };
 
   useEffect(() => {
     fetchVlogs();
-  }, []);
 
-  const save = async (next: Vlog[]) => {
-    setVlogs(next);
-    localStorage.setItem(KEY, JSON.stringify(next));
-  };
+    // Subscribe to Supabase Realtime changes across all connected devices
+    const channel = supabase
+      .channel("vlogs-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "vlogs" },
+        () => {
+          fetchVlogs();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const add = async (v: Omit<Vlog, "id">) => {
     const id = crypto.randomUUID();
     const newVlog: Vlog = { ...v, id };
 
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { error } = await supabase.from("vlogs").insert([
-          {
-            id: newVlog.id,
-            title: newVlog.title,
-            description: newVlog.description,
-            video_url: newVlog.videoUrl,
-            image_url: newVlog.imageUrl || "",
-            date: newVlog.date,
-          },
-        ]);
+    try {
+      const { error } = await supabase.from("vlogs").insert([
+        {
+          id: newVlog.id,
+          title: newVlog.title,
+          description: newVlog.description,
+          video_url: newVlog.videoUrl,
+          image_url: newVlog.imageUrl || "",
+          date: newVlog.date,
+        },
+      ]);
+
+      if (error) {
+        console.error("Supabase insert error:", error.message);
+      } else {
         if (newVlog.imageUrl) {
           try {
             await supabase.from("images").insert([
@@ -123,54 +107,47 @@ export function useVlogs() {
               },
             ]);
           } catch {
-            // ignore image table error if table not yet created
+            // non-fatal if images table is pending
           }
         }
-        if (!error) {
-          setVlogs([newVlog, ...vlogs]);
-          return;
-        }
-        console.warn("Supabase insert error:", error.message);
-      } catch (err) {
-        console.warn("Failed to insert to Supabase:", err);
+        await fetchVlogs();
       }
+    } catch (err) {
+      console.error("Failed to add vlog to Supabase:", err);
     }
-    save([newVlog, ...vlogs]);
   };
 
   const update = async (v: Vlog) => {
-    if (isSupabaseConfigured && supabase) {
-      try {
-        await supabase
-          .from("vlogs")
-          .update({
-            title: v.title,
-            description: v.description,
-            video_url: v.videoUrl,
-            image_url: v.imageUrl || "",
-            date: v.date,
-          })
-          .eq("id", v.id);
-      } catch (err) {
-        console.warn("Supabase update error:", err);
-      }
+    try {
+      await supabase
+        .from("vlogs")
+        .update({
+          title: v.title,
+          description: v.description,
+          video_url: v.videoUrl,
+          image_url: v.imageUrl || "",
+          date: v.date,
+        })
+        .eq("id", v.id);
+
+      await fetchVlogs();
+    } catch (err) {
+      console.error("Supabase update error:", err);
     }
-    save(vlogs.map((x) => (x.id === v.id ? v : x)));
   };
 
   const remove = async (id: string) => {
-    if (isSupabaseConfigured && supabase) {
-      try {
-        await supabase.from("vlogs").delete().eq("id", id);
-      } catch (err) {
-        console.warn("Supabase delete error:", err);
-      }
+    try {
+      await supabase.from("vlogs").delete().eq("id", id);
+      await fetchVlogs();
+    } catch (err) {
+      console.error("Supabase delete error:", err);
     }
-    save(vlogs.filter((x) => x.id !== id));
   };
 
   return {
     vlogs,
+    loading,
     add,
     update,
     remove,
@@ -186,36 +163,31 @@ export function useAdmin() {
     const isLocalAdmin = localStorage.getItem(AUTH) === "1";
     setAdmin(isLocalAdmin);
 
-    if (isSupabaseConfigured && supabase) {
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session) {
-          localStorage.setItem(AUTH, "1");
-          setAdmin(true);
-        }
-        setLoading(false);
-      });
-
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-        if (session) {
-          localStorage.setItem(AUTH, "1");
-          setAdmin(true);
-        } else if (!isLocalAdmin) {
-          setAdmin(false);
-        }
-      });
-
-      return () => {
-        subscription.unsubscribe();
-      };
-    } else {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        localStorage.setItem(AUTH, "1");
+        setAdmin(true);
+      }
       setLoading(false);
-    }
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        localStorage.setItem(AUTH, "1");
+        setAdmin(true);
+      } else if (!isLocalAdmin) {
+        setAdmin(false);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signUp = async (email: string, password: string) => {
-    if (!isSupabaseConfigured || !supabase) {
-      return { success: false, error: "Supabase URL is not configured in .env" };
-    }
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -238,8 +210,8 @@ export function useAdmin() {
   const login = async (email?: string, password?: string) => {
     const cleanEmail = email?.trim().toLowerCase();
 
-    // 1. Try Supabase Auth if configured
-    if (isSupabaseConfigured && supabase && email && password) {
+    // 1. Try Supabase Auth
+    if (email && password) {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -251,28 +223,12 @@ export function useAdmin() {
         return { success: true };
       }
 
-      // If Supabase gave "Invalid login credentials", check if user matches pre-made
+      // If user matches pre-made credentials, grant access and create session
       const isPremade =
         cleanEmail === PREMADE_CREDENTIALS.email.toLowerCase() &&
         password === PREMADE_CREDENTIALS.password;
 
       if (isPremade) {
-        // Automatically attempt to register in Supabase if user doesn't exist yet
-        try {
-          const signUpRes = await supabase.auth.signUp({
-            email: PREMADE_CREDENTIALS.email,
-            password: PREMADE_CREDENTIALS.password,
-          });
-          if (signUpRes.data.session) {
-            localStorage.setItem(AUTH, "1");
-            setAdmin(true);
-            return { success: true };
-          }
-        } catch {
-          // ignore signup fallback errors
-        }
-
-        // Grant local access so creator is never locked out
         localStorage.setItem(AUTH, "1");
         setAdmin(true);
         return { success: true };
@@ -284,28 +240,19 @@ export function useAdmin() {
       };
     }
 
-    // 2. Fallback when Supabase is not yet configured with a valid remote URL
-    const isPremade =
-      cleanEmail === PREMADE_CREDENTIALS.email.toLowerCase() &&
-      password === PREMADE_CREDENTIALS.password;
-
-    if (isPremade) {
-      localStorage.setItem(AUTH, "1");
-      setAdmin(true);
-      return { success: true };
-    }
-
     return {
       success: false,
-      error: "Invalid email or password. Use the pre-made credentials.",
+      error: "Invalid email or password.",
     };
   };
 
   const logout = async () => {
     localStorage.removeItem(AUTH);
     setAdmin(false);
-    if (isSupabaseConfigured && supabase) {
+    try {
       await supabase.auth.signOut();
+    } catch {
+      // ignore logout errors
     }
   };
 

@@ -1,23 +1,19 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "";
-const supabaseKey =
+export const SUPABASE_URL =
+  import.meta.env.VITE_SUPABASE_URL || "https://okkyzvtjcwvovkyesyfi.supabase.co";
+
+export const SUPABASE_KEY =
   import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
   import.meta.env.VITE_SUPABASE_ANON_KEY ||
-  "";
+  "sb_publishable_aOUoDH4idLOxQeeaJM3mBw_gV_SYRxI";
 
-export const isSupabaseConfigured = Boolean(
-  supabaseUrl &&
-    !supabaseUrl.includes("your-project-ref") &&
-    supabaseKey &&
-    supabaseUrl.startsWith("http")
-);
+export const isSupabaseConfigured = true;
 
-export const supabase: SupabaseClient | null = isSupabaseConfigured
-  ? createClient(supabaseUrl, supabaseKey, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-      },
-    })
-  : null;
+export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+  },
+});
