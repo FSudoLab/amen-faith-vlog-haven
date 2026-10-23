@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import logoClean from "@/assets/amen-logo-clean.png.asset.json";
-import mattHero from "@/assets/matt-hero.png.asset.json";
-import poon from "@/assets/poon.mp4.asset.json";
+import logo from "@/assets/images/logo.png";
+import mattHoldingPoon from "@/assets/images/matt-holding-poon.png";
+import poonVid from "@/assets/images/poon-vid.mp4";
 import { SiteFooter, SiteHeader, Socials } from "@/components/SiteHeader";
 
 export const Route = createFileRoute("/")({
@@ -54,8 +54,8 @@ function Index() {
           <div className="relative">
             <div className="pointer-events-none absolute bottom-0 right-0 h-2/3 w-2/3 rounded-full bg-halo/50 blur-3xl" />
             <img
-              src={mattHero.url}
-              alt="Matt Estrella with the Santo Niño"
+              src={mattHoldingPoon}
+              alt="Matt Estrella holding Poong Nazareno"
               className="matt-sway relative ml-auto block w-full max-w-[40rem] drop-shadow-[0_25px_35px_rgba(30,58,138,0.25)]"
             />
           </div>
@@ -63,15 +63,15 @@ function Index() {
       </section>
 
       <section className="overflow-hidden bg-video-surface">
-          <video
-            src={poon.url}
-            className="block aspect-video w-full bg-video-surface object-contain"
-            controls
-            autoPlay
-            muted
-            loop
-            playsInline
-          />
+        <video
+          src={poonVid}
+          className="block aspect-video w-full bg-video-surface object-contain"
+          controls
+          autoPlay
+          muted
+          loop
+          playsInline
+        />
       </section>
 
       <section className="mx-auto max-w-6xl px-5 py-20">
@@ -112,7 +112,7 @@ function Index() {
       </section>
 
       <section className="mx-auto max-w-6xl px-5 py-20">
-        <img src={logoClean.url} alt="AMEN – Arts of Matt Estrella Network" className="mx-auto w-full max-w-sm drop-shadow-[0_12px_24px_rgba(30,58,138,0.18)]" />
+        <img src={logo} alt="AMEN – Arts of Matt Estrella Network" className="mx-auto w-full max-w-sm drop-shadow-[0_12px_24px_rgba(30,58,138,0.18)]" />
         <h2 className="mt-8 text-center font-display text-4xl uppercase">Kumonekta kay Matt</h2>
         <div className="mt-10">
           <Socials />
