@@ -1,8 +1,9 @@
 -- ========================================================
--- AMEN FAITH VLOG HAVEN - COMPLETE SUPABASE SCHEMA
+-- AMEN FAITH VLOG HAVEN - FAIL-PROOF SUPABASE SCHEMA
+-- Run this in Supabase -> SQL Editor -> Run
 -- ========================================================
 
--- 1. PROFILES / USERS TABLE
+-- 1. PROFILES TABLE
 create table if not exists public.profiles (
   id uuid primary key default gen_random_uuid(),
   email text unique not null,
@@ -11,10 +12,13 @@ create table if not exists public.profiles (
 );
 
 alter table public.profiles enable row level security;
+drop policy if exists "Allow public read on profiles" on public.profiles;
 create policy "Allow public read on profiles" on public.profiles for select using (true);
+
+drop policy if exists "Allow all on profiles for authenticated" on public.profiles;
 create policy "Allow all on profiles for authenticated" on public.profiles for all using (true);
 
--- Insert the pre-made creator user
+-- Insert pre-made creator profile
 insert into public.profiles (email, role)
 values ('matthew1@gmail.com', 'creator')
 on conflict (email) do nothing;
@@ -32,9 +36,16 @@ create table if not exists public.vlogs (
 );
 
 alter table public.vlogs enable row level security;
+drop policy if exists "Allow public read on vlogs" on public.vlogs;
 create policy "Allow public read on vlogs" on public.vlogs for select using (true);
+
+drop policy if exists "Allow insert on vlogs" on public.vlogs;
 create policy "Allow insert on vlogs" on public.vlogs for insert with check (true);
+
+drop policy if exists "Allow update on vlogs" on public.vlogs;
 create policy "Allow update on vlogs" on public.vlogs for update using (true);
+
+drop policy if exists "Allow delete on vlogs" on public.vlogs;
 create policy "Allow delete on vlogs" on public.vlogs for delete using (true);
 
 -- Seed initial vlogs
@@ -55,7 +66,17 @@ create table if not exists public.images (
 );
 
 alter table public.images enable row level security;
+drop policy if exists "Allow public read on images" on public.images;
 create policy "Allow public read on images" on public.images for select using (true);
+
+drop policy if exists "Allow insert on images" on public.images;
 create policy "Allow insert on images" on public.images for insert with check (true);
+
+drop policy if exists "Allow update on images" on public.images;
 create policy "Allow update on images" on public.images for update using (true);
+
+drop policy if exists "Allow delete on images" on public.images;
 create policy "Allow delete on images" on public.images for delete using (true);
+
+-- Reload Supabase Schema Cache
+notify pgrst, 'reload schema';

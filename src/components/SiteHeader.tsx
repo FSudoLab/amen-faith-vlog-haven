@@ -1,10 +1,17 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { SiInstagram, SiTiktok, SiX, SiYoutube } from "react-icons/si";
 import logo from "@/assets/images/logo.png";
 import { useAdmin } from "@/lib/vlogs";
 
 export function SiteHeader() {
   const { admin, logout } = useAdmin();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate({ to: "/" });
+  };
+
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
@@ -19,7 +26,7 @@ export function SiteHeader() {
             Vlogs
           </Link>
           {admin ? (
-            <button onClick={logout} className="rounded-full bg-primary px-4 py-2 uppercase text-primary-foreground">
+            <button onClick={handleLogout} className="rounded-full bg-primary px-4 py-2 uppercase text-primary-foreground">
               Logout
             </button>
           ) : (
