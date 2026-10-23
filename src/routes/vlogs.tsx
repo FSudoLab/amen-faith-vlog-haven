@@ -44,13 +44,13 @@ function Vlogs() {
       <SiteHeader />
 
       {/* Santo Niño peeking in from the right edge, head at 3 o'clock */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed right-0 top-[30%] z-30 hidden w-[420px] translate-x-1/2 md:block"
-      >
-        <div className="halo-glow absolute -inset-14 opacity-70" />
-        <img src={santo.url} alt="" className="relative w-full" />
+      <div aria-hidden className="pointer-events-none fixed inset-y-0 right-0 z-30 hidden items-center md:flex">
+        <div className="relative translate-x-1/2 translate-y-[16vh]">
+          <div className="halo-glow absolute -inset-12 opacity-70" />
+          <img src={santo.url} alt="" className="relative h-[78vh] w-auto" />
+        </div>
       </div>
+
 
       <section className="relative overflow-hidden bg-heaven py-16 text-center">
         <div className="rays pointer-events-none absolute inset-0" />
@@ -58,7 +58,7 @@ function Vlogs() {
         <p className="relative mt-3 text-muted-foreground">Mga kwento ng pananampalataya, pag-asa at pagkakaisa</p>
       </section>
 
-      <div className="mx-auto max-w-6xl px-5 py-14 md:pr-[240px]">
+      <div className="mx-auto max-w-6xl px-5 py-14 md:pr-[280px]">
         {admin && (
           <form onSubmit={submit} className="mb-12 grid gap-3 rounded-2xl border border-border bg-card p-6 shadow-holy md:grid-cols-2">
             <h2 className="font-display text-2xl uppercase md:col-span-2">{editId ? "Edit vlog" : "New vlog"}</h2>
