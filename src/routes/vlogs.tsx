@@ -1,7 +1,6 @@
 // ============= Vlogs page =============
-// Layout: intro on the left 1/3, vlog boxes on the right 2/3 (title / image /
-// description / date), and the Santo Niño peeking in from the right edge with
-// its head at the 3 o'clock position.
+// Layout: vlog boxes (title / image / description / date) fill the right side at
+// max width, and the Santo Niño stands big on the LEFT edge, head at 3 o'clock.
 
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
@@ -43,14 +42,13 @@ function Vlogs() {
     <div className="min-h-screen">
       <SiteHeader />
 
-      {/* Santo Niño peeking in from the right edge, head at 3 o'clock */}
-      <div aria-hidden className="pointer-events-none fixed inset-y-0 right-0 z-30 hidden items-center md:flex">
-        <div className="relative translate-x-1/2 translate-y-[16vh]">
+      {/* Santo Niño standing big on the left edge, head at 3 o'clock */}
+      <div aria-hidden className="pointer-events-none fixed inset-y-0 left-0 z-30 hidden items-center md:flex">
+        <div className="relative -translate-x-1/2 translate-y-[16vh]">
           <div className="halo-glow absolute -inset-12 opacity-70" />
           <img src={santo.url} alt="" className="relative h-[78vh] w-auto" />
         </div>
       </div>
-
 
       <section className="relative overflow-hidden bg-heaven py-16 text-center">
         <div className="rays pointer-events-none absolute inset-0" />
@@ -58,7 +56,7 @@ function Vlogs() {
         <p className="relative mt-3 text-muted-foreground">Mga kwento ng pananampalataya, pag-asa at pagkakaisa</p>
       </section>
 
-      <div className="mx-auto max-w-6xl px-5 py-14 md:pr-[280px]">
+      <div className="mx-auto max-w-7xl px-5 py-14 md:pl-[280px]">
         {admin && (
           <form onSubmit={submit} className="mb-12 grid gap-3 rounded-2xl border border-border bg-card p-6 shadow-holy md:grid-cols-2">
             <h2 className="font-display text-2xl uppercase md:col-span-2">{editId ? "Edit vlog" : "New vlog"}</h2>
@@ -77,45 +75,35 @@ function Vlogs() {
           </form>
         )}
 
-        <div className="grid gap-10 md:grid-cols-[0.8fr_2.2fr] md:items-center">
-          <aside className="md:sticky md:top-24">
-            <p className="font-display text-xs uppercase tracking-[0.3em] text-primary/70">AMEN Vlogs</p>
-            <h2 className="mt-2 font-display text-2xl uppercase leading-tight">Mga Kwento ng Pananampalataya</h2>
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              Panoorin ang mga vlog ni Matt — mga kwento ng pananampalataya, pag-asa at pagkakaisa para sa bawat Kapanalig.
-            </p>
-          </aside>
-
-          <div className="flex flex-col gap-8">
-            {vlogs.length === 0 && <p className="text-center text-muted-foreground">Wala pang vlogs.</p>}
-            {vlogs.map((v) => {
-              const embed = toEmbed(v.videoUrl);
-              return (
-                <article key={v.id} className="rounded-2xl border border-border bg-card p-6 shadow-holy">
-                  <h3 className="font-display text-2xl uppercase md:text-3xl">{v.title}</h3>
-                  <div className="mt-4 aspect-video overflow-hidden rounded-xl bg-heaven">
-                    {embed ? (
-                      <iframe src={embed} title={v.title} className="h-full w-full" allowFullScreen />
-                    ) : (
-                      <div className="flex h-full items-center justify-center font-display text-5xl text-primary/70">AMEN</div>
-                    )}
-                  </div>
-                  <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{v.description}</p>
-                  <p className="mt-3 text-xs uppercase tracking-widest text-muted-foreground/80">{v.date}</p>
-                  {admin && (
-                    <div className="mt-4 flex gap-2 text-sm">
-                      <button onClick={() => { setEditId(v.id); setForm({ title: v.title, description: v.description, videoUrl: v.videoUrl, date: v.date }); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="rounded-full bg-secondary px-4 py-1.5">
-                        Edit
-                      </button>
-                      <button onClick={() => confirm("Delete this vlog?") && remove(v.id)} className="rounded-full bg-destructive px-4 py-1.5 text-destructive-foreground">
-                        Delete
-                      </button>
-                    </div>
+        <div className="flex flex-col gap-8">
+          {vlogs.length === 0 && <p className="text-center text-muted-foreground">Wala pang vlogs.</p>}
+          {vlogs.map((v) => {
+            const embed = toEmbed(v.videoUrl);
+            return (
+              <article key={v.id} className="rounded-2xl border border-border bg-card p-6 shadow-holy">
+                <h3 className="font-display text-2xl uppercase md:text-3xl">{v.title}</h3>
+                <div className="mt-4 aspect-video overflow-hidden rounded-xl bg-heaven">
+                  {embed ? (
+                    <iframe src={embed} title={v.title} className="h-full w-full" allowFullScreen />
+                  ) : (
+                    <div className="flex h-full items-center justify-center font-display text-5xl text-primary/70">AMEN</div>
                   )}
-                </article>
-              );
-            })}
-          </div>
+                </div>
+                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{v.description}</p>
+                <p className="mt-3 text-xs uppercase tracking-widest text-muted-foreground/80">{v.date}</p>
+                {admin && (
+                  <div className="mt-4 flex gap-2 text-sm">
+                    <button onClick={() => { setEditId(v.id); setForm({ title: v.title, description: v.description, videoUrl: v.videoUrl, date: v.date }); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="rounded-full bg-secondary px-4 py-1.5">
+                      Edit
+                    </button>
+                    <button onClick={() => confirm("Delete this vlog?") && remove(v.id)} className="rounded-full bg-destructive px-4 py-1.5 text-destructive-foreground">
+                      Delete
+                    </button>
+                  </div>
+                )}
+              </article>
+            );
+          })}
         </div>
       </div>
       <SiteFooter />
