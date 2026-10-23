@@ -154,7 +154,8 @@
   max-width: none;
   left: -110px;
   top: 50%;
-  transform: translate(-50%, -50%) rotate(90deg);
+  /* Clock-face rotation: 1:30 = 45deg clockwise from upright (head toward upper-right). */
+  transform: translate(-50%, -50%) rotate(45deg);
 }
 
 .matt-sway {
