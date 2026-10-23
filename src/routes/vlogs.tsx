@@ -42,21 +42,20 @@ function Vlogs() {
     <div className="min-h-screen">
       <SiteHeader />
 
-      {/* Santo Niño standing big on the left edge, head at 3 o'clock */}
-      <div aria-hidden className="pointer-events-none fixed inset-y-0 left-0 z-30 hidden items-center md:flex">
-        <div className="relative -translate-x-1/2 translate-y-[16vh]">
-          <div className="halo-glow absolute -inset-12 opacity-70" />
-          <img src={santo.url} alt="" className="relative h-[78vh] w-auto" />
-        </div>
-      </div>
-
       <section className="relative overflow-hidden bg-heaven py-16 text-center">
         <div className="rays pointer-events-none absolute inset-0" />
         <h1 className="relative font-display text-5xl uppercase md:text-6xl">Vlogs</h1>
         <p className="relative mt-3 text-muted-foreground">Mga kwento ng pananampalataya, pag-asa at pagkakaisa</p>
       </section>
 
-      <div className="mx-auto max-w-7xl px-5 py-14 md:pl-[280px]">
+      <section className="relative overflow-clip">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-5 px-5 py-14 md:grid-cols-[240px_minmax(0,1fr)]">
+        <aside aria-hidden className="pointer-events-none relative hidden md:block">
+          <div className="vlog-figure sticky top-28">
+            <img src={santo.url} alt="" />
+          </div>
+        </aside>
+        <div className="min-w-0">
         {admin && (
           <form onSubmit={submit} className="mb-12 grid gap-3 rounded-2xl border border-border bg-card p-6 shadow-holy md:grid-cols-2">
             <h2 className="font-display text-2xl uppercase md:col-span-2">{editId ? "Edit vlog" : "New vlog"}</h2>
@@ -106,6 +105,8 @@ function Vlogs() {
           })}
         </div>
       </div>
+      </div>
+      </section>
       <SiteFooter />
     </div>
   );

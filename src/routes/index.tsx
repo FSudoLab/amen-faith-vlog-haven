@@ -62,19 +62,16 @@ function Index() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-heaven py-16">
-        <div className="rays pointer-events-none absolute inset-0" />
-        <div className="relative mx-auto max-w-5xl px-5">
+      <section className="overflow-hidden bg-video-surface">
           <video
             src={poon.url}
-            className="aspect-video w-full rounded-2xl border border-border bg-black object-contain shadow-holy"
+            className="block aspect-video w-full bg-video-surface object-contain"
             controls
             autoPlay
             muted
             loop
             playsInline
           />
-        </div>
       </section>
 
       <section className="mx-auto max-w-6xl px-5 py-20">
