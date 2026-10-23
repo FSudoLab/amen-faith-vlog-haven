@@ -25,14 +25,10 @@ export function SiteHeader() {
           <Link to="/vlogs" className="rounded-full px-4 py-2 hover:bg-gold-soft" activeProps={{ className: "bg-gold" }}>
             Vlogs
           </Link>
-          {admin ? (
+          {admin && (
             <button onClick={handleLogout} className="rounded-full bg-primary px-4 py-2 uppercase text-primary-foreground">
               Logout
             </button>
-          ) : (
-            <Link to="/login" className="rounded-full bg-primary px-4 py-2 text-primary-foreground">
-              Login
-            </Link>
           )}
         </nav>
       </div>
