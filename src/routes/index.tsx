@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import logo from "@/assets/images/logo.png";
 import mattHoldingPoon from "@/assets/images/matt-holding-poon.png";
+import bible from "@/assets/images/bible.png";
 import poonVid from "@/assets/images/poon-vid.mp4";
 import { SiteFooter, SiteHeader, Socials } from "@/components/SiteHeader";
 
@@ -78,15 +79,27 @@ function Index() {
         <h2 className="text-center font-display text-5xl uppercase">AMEN</h2>
         <div className="mt-10 grid gap-5 md:grid-cols-2">
           {acrostic.map(([l, t]) => (
-            <div key={l} className="flex items-center gap-5 rounded-2xl border border-border bg-card p-6 shadow-holy">
+            <div key={l} className="flex items-center gap-5 rounded-2xl border border-border bg-card p-6 shadow-holy transition hover:-translate-y-1">
               <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-gold font-display text-4xl ring-4 ring-halo/40">{l}</span>
-              <p className="text-lg">{t}</p>
+              <p className="text-lg font-medium">{t}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="bg-primary text-primary-foreground">
+      <section className="relative bg-primary text-primary-foreground">
+        {/* Radiant Bible at the top right of Bisyon & Misyon (bottom right of AMEN 4) */}
+        <div className="pointer-events-none absolute -top-16 right-4 sm:-top-20 sm:right-8 md:-top-24 md:right-12 z-20">
+          <div className="relative">
+            <div className="pointer-events-none absolute inset-0 rounded-full bg-halo/40 blur-2xl scale-125" />
+            <img
+              src={bible}
+              alt="Banal na Bibliya"
+              className="relative h-32 w-32 sm:h-44 sm:w-44 md:h-52 md:w-52 object-contain drop-shadow-[0_20px_35px_rgba(234,179,8,0.5)] transition-transform duration-500 hover:scale-105"
+            />
+          </div>
+        </div>
+
         <div className="mx-auto grid max-w-6xl gap-10 px-5 py-20 md:grid-cols-2">
           <div>
             <p className="font-display uppercase tracking-widest text-gold">Bisyon — AMEN</p>
@@ -96,7 +109,7 @@ function Index() {
               pag-asa para sa Simbahan at sambayanang Pilipino.
             </p>
           </div>
-          <div>
+          <div className="sm:pr-20 md:pr-28">
             <p className="font-display uppercase tracking-widest text-gold">Misyon — AMEN</p>
             <p className="mt-4 opacity-95">Ang AMEN ay may layuning:</p>
             <ul className="mt-3 space-y-3">
