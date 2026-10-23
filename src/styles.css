@@ -74,9 +74,11 @@
   --color-gold: var(--gold);
   --color-gold-soft: var(--gold-soft);
   --color-halo: var(--halo);
+  --color-video-surface: var(--video-surface);
 }
 
 :root {
+  --video-surface: oklch(1 0 0);
   --radius: 1rem;
   --background: oklch(0.985 0.02 95);
   --foreground: oklch(0.3 0.13 268);
@@ -139,6 +141,20 @@
   50% {
     transform: translateX(16px) rotate(0.5deg);
   }
+}
+
+.vlog-figure {
+  height: min(520px, calc(100svh - 140px));
+  width: 240px;
+}
+
+.vlog-figure img {
+  position: absolute;
+  width: min(520px, calc(100svh - 140px));
+  max-width: none;
+  left: -110px;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(90deg);
 }
 
 .matt-sway {
