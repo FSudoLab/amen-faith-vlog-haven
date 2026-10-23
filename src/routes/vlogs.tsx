@@ -6,9 +6,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { ImagePlus, Trash2, Trophy, ShieldCheck, ArrowRight } from "lucide-react";
+import { SiYoutube } from "react-icons/si";
 import poonVlog from "@/assets/images/poon-vlog.png";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
-import { toEmbed, useAdmin, useVlogs, type Vlog } from "@/lib/vlogs";
+import { getYouTubeWatchUrl, toEmbed, useAdmin, useVlogs, type Vlog } from "@/lib/vlogs";
 
 export const Route = createFileRoute("/vlogs")({
   head: () => ({
@@ -164,12 +165,20 @@ function Vlogs() {
           ) : null}
           {vlogs.map((v) => {
             const embed = toEmbed(v.videoUrl);
+            const watchUrl = getYouTubeWatchUrl(v.videoUrl) || (v.videoUrl?.startsWith("http") ? v.videoUrl : null);
             return (
               <article key={v.id} className="rounded-2xl border border-border bg-card p-6 shadow-holy">
                 <h3 className="font-display text-2xl uppercase md:text-3xl">{v.title}</h3>
                 <div className="mt-4 aspect-video overflow-hidden rounded-xl bg-heaven">
                   {embed ? (
-                    <iframe src={embed} title={v.title} className="h-full w-full" allowFullScreen />
+                    <iframe
+                      src={embed}
+                      title={v.title}
+                      className="h-full w-full border-0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                      loading="lazy"
+                    />
                   ) : v.imageUrl ? (
                     <img src={v.imageUrl} alt={v.title} className="h-full w-full object-cover" />
                   ) : (
@@ -182,13 +191,25 @@ function Vlogs() {
                   )}
                 </div>
                 <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{v.description}</p>
-                <p className="mt-3 text-xs uppercase tracking-widest text-muted-foreground/80">{v.date}</p>
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-border/50">
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground/80">{v.date}</p>
+                  {watchUrl && (
+                    <a
+                      href={watchUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-full bg-red-600/10 hover:bg-red-600 hover:text-white text-red-600 px-3 py-1 text-xs font-bold uppercase transition"
+                    >
+                      <SiYoutube className="h-3.5 w-3.5" /> Panoorin sa YouTube ↗
+                    </a>
+                  )}
+                </div>
                 {admin && (
-                  <div className="mt-4 flex gap-2 text-sm">
-                    <button onClick={() => { setEditId(v.id); setForm({ title: v.title, description: v.description, videoUrl: v.videoUrl, imageUrl: v.imageUrl || "", date: v.date }); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="rounded-full bg-secondary px-4 py-1.5">
+                  <div className="mt-4 flex gap-2 text-sm pt-2 border-t border-border/50">
+                    <button onClick={() => { setEditId(v.id); setForm({ title: v.title, description: v.description, videoUrl: v.videoUrl, imageUrl: v.imageUrl || "", date: v.date }); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="rounded-full bg-secondary px-4 py-1.5 font-bold uppercase">
                       Edit
                     </button>
-                    <button onClick={() => confirm("Delete this vlog?") && remove(v.id)} className="rounded-full bg-destructive px-4 py-1.5 text-destructive-foreground">
+                    <button onClick={() => confirm("Delete this vlog?") && remove(v.id)} className="rounded-full bg-destructive px-4 py-1.5 font-bold uppercase text-destructive-foreground">
                       Delete
                     </button>
                   </div>

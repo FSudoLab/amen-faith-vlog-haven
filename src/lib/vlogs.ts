@@ -339,7 +339,28 @@ export function useAdmin() {
   };
 };
 
-export function toEmbed(url: string): string | null {
-  const m = url.match(/(?:youtu\.be\/|v=|shorts\/|embed\/)([\w-]{11})/);
-  return m ? `https://www.youtube.com/embed/${m[1]}` : null;
+export function extractYouTubeId(url?: string): string | null {
+  if (!url) return null;
+  const clean = url.trim();
+  // Support youtu.be, m.youtube.com, watch?v=, watch?...&v=, shorts/, live/, and embed/
+  const m = clean.match(
+    /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/|live\/))([\w-]{11})/i
+  );
+  if (m && m[1]) return m[1];
+  const fallback = clean.match(/(?:youtu\.be\/|v=|\/v\/|\/embed\/|\/shorts\/|\/live\/)([\w-]{11})/i);
+  return fallback && fallback[1] ? fallback[1] : null;
 }
+
+export function toEmbed(url: string): string | null {
+  const id = extractYouTubeId(url);
+  if (!id) return null;
+  // &playsinline=1 allows iOS and Android mobile browsers to play inline without breaking
+  return `https://www.youtube.com/embed/${id}?playsinline=1&rel=0&modestbranding=1&enablejsapi=1`;
+}
+
+export function getYouTubeWatchUrl(url?: string): string | null {
+  const id = extractYouTubeId(url);
+  if (!id) return null;
+  return `https://www.youtube.com/watch?v=${id}`;
+}
+
