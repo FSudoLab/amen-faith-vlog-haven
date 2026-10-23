@@ -33,7 +33,7 @@ const empty: Omit<Vlog, "id"> = {
 };
 
 function Vlogs() {
-  const { vlogs, add, update, remove } = useVlogs();
+  const { vlogs, loading, add, update, remove } = useVlogs();
   const { admin } = useAdmin();
   const [form, setForm] = useState<Omit<Vlog, "id">>(empty);
   const [editId, setEditId] = useState<string | null>(null);
@@ -148,7 +148,20 @@ function Vlogs() {
         )}
 
         <div className="flex flex-col gap-8">
-          {vlogs.length === 0 && <p className="text-center text-muted-foreground">Wala pang vlogs.</p>}
+          {loading && vlogs.length === 0 ? (
+            <div className="space-y-6">
+              {[1, 2].map((n) => (
+                <div key={n} className="rounded-2xl border border-border bg-card p-6 shadow-holy animate-pulse space-y-4">
+                  <div className="h-8 w-2/3 rounded-lg bg-muted" />
+                  <div className="aspect-video w-full rounded-xl bg-muted" />
+                  <div className="h-4 w-full rounded bg-muted" />
+                  <div className="h-3 w-1/4 rounded bg-muted" />
+                </div>
+              ))}
+            </div>
+          ) : vlogs.length === 0 ? (
+            <p className="text-center text-muted-foreground py-12">Wala pang vlogs.</p>
+          ) : null}
           {vlogs.map((v) => {
             const embed = toEmbed(v.videoUrl);
             return (

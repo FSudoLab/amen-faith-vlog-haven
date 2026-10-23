@@ -29,9 +29,33 @@ export const PREMADE_CREDENTIALS = {
   password: "Password*123",
 };
 
+const VLOGS_CACHE_KEY = "amen-cached-vlogs";
+let memoryVlogsCache: Vlog[] | null = null;
+
+function getInitialVlogs(): Vlog[] {
+  if (memoryVlogsCache && memoryVlogsCache.length > 0) {
+    return memoryVlogsCache;
+  }
+  if (typeof window !== "undefined") {
+    try {
+      const stored = localStorage.getItem(VLOGS_CACHE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          memoryVlogsCache = parsed;
+          return parsed;
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }
+  return [];
+}
+
 export function useVlogs() {
-  const [vlogs, setVlogs] = useState<Vlog[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [vlogs, setVlogs] = useState<Vlog[]>(getInitialVlogs);
+  const [loading, setLoading] = useState(() => vlogs.length === 0);
 
   const fetchVlogs = async () => {
     try {
@@ -49,7 +73,11 @@ export function useVlogs() {
           imageUrl: d.image_url || d.imageUrl || "",
           date: d.date || new Date().toISOString().slice(0, 10),
         }));
+        memoryVlogsCache = mapped;
         setVlogs(mapped);
+        if (typeof window !== "undefined") {
+          localStorage.setItem(VLOGS_CACHE_KEY, JSON.stringify(mapped));
+        }
       }
     } catch (err) {
       console.error("Failed to load vlogs from Supabase:", err);
@@ -81,6 +109,14 @@ export function useVlogs() {
   const add = async (v: Omit<Vlog, "id">) => {
     const id = crypto.randomUUID();
     const newVlog: Vlog = { ...v, id };
+
+    // Instant optimistic update
+    const updated = [newVlog, ...vlogs];
+    memoryVlogsCache = updated;
+    setVlogs(updated);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(VLOGS_CACHE_KEY, JSON.stringify(updated));
+    }
 
     try {
       const { error } = await supabase.from("vlogs").insert([
@@ -118,6 +154,14 @@ export function useVlogs() {
   };
 
   const update = async (v: Vlog) => {
+    // Instant optimistic update
+    const updated = vlogs.map((item) => (item.id === v.id ? v : item));
+    memoryVlogsCache = updated;
+    setVlogs(updated);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(VLOGS_CACHE_KEY, JSON.stringify(updated));
+    }
+
     try {
       await supabase
         .from("vlogs")
@@ -137,6 +181,14 @@ export function useVlogs() {
   };
 
   const remove = async (id: string) => {
+    // Instant optimistic update
+    const updated = vlogs.filter((item) => item.id !== id);
+    memoryVlogsCache = updated;
+    setVlogs(updated);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(VLOGS_CACHE_KEY, JSON.stringify(updated));
+    }
+
     try {
       await supabase.from("vlogs").delete().eq("id", id);
       await fetchVlogs();
