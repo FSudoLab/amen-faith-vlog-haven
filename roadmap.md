@@ -1,7 +1,7 @@
 # Roadmap
 
-- [ ] Make the home video edge-to-edge on a white background
-- [ ] Rotate the Poon toward 3 o'clock and contain its scrolling within the vlog list
+- [x] Make the home video edge-to-edge on a white background
+- [x] Rotate the Poon toward 3 o'clock and contain its scrolling within the vlog list
 
 - [x] Hero: motto + translation + "Panoorin ang Vlogs" on the left, Matt's photo big on the right
 - [x] Add the AMEN logo to the "Kumonekta kay Matt" section
