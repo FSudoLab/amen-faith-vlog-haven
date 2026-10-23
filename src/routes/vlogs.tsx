@@ -46,10 +46,10 @@ function Vlogs() {
       {/* Santo Niño peeking in from the right edge, head at 3 o'clock */}
       <div
         aria-hidden
-        className="pointer-events-none fixed right-0 top-[44%] z-30 hidden w-[230px] translate-x-[26%] md:block"
+        className="pointer-events-none fixed right-0 top-[30%] z-30 hidden w-[420px] translate-x-1/2 md:block"
       >
         <div className="halo-glow absolute -inset-14 opacity-70" />
-        <img src={santo.url} alt="" className="relative w-full drop-shadow-[0_18px_40px_rgba(0,0,0,0.35)]" />
+        <img src={santo.url} alt="" className="relative w-full" />
       </div>
 
       <section className="relative overflow-hidden bg-heaven py-16 text-center">
@@ -58,7 +58,7 @@ function Vlogs() {
         <p className="relative mt-3 text-muted-foreground">Mga kwento ng pananampalataya, pag-asa at pagkakaisa</p>
       </section>
 
-      <div className="mx-auto max-w-6xl px-5 py-14 md:pr-[170px]">
+      <div className="mx-auto max-w-6xl px-5 py-14 md:pr-[240px]">
         {admin && (
           <form onSubmit={submit} className="mb-12 grid gap-3 rounded-2xl border border-border bg-card p-6 shadow-holy md:grid-cols-2">
             <h2 className="font-display text-2xl uppercase md:col-span-2">{editId ? "Edit vlog" : "New vlog"}</h2>
