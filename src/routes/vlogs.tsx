@@ -3,9 +3,9 @@
 // max width, and the Santo Niño stands big on the LEFT edge, head at the 1:30
 // clock position (45deg clockwise from upright).
 
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useRef, useState } from "react";
-import { ImagePlus, Trash2 } from "lucide-react";
+import { ImagePlus, Trash2, Trophy, ShieldCheck, ArrowRight } from "lucide-react";
 import poonVlog from "@/assets/images/poon-vlog.png";
 import { SiteFooter, SiteHeader } from "@/components/SiteHeader";
 import { toEmbed, useAdmin, useVlogs, type Vlog } from "@/lib/vlogs";

@@ -78,5 +78,30 @@ create policy "Allow update on images" on public.images for update using (true);
 drop policy if exists "Allow delete on images" on public.images;
 create policy "Allow delete on images" on public.images for delete using (true);
 
+-- 4. SOLID KAPANALIGS TABLE (Top 10 Solid Kapanaligs of the Month)
+create table if not exists public.solid_kapanaligs (
+  id uuid primary key default gen_random_uuid(),
+  rank_number integer not null default 1,
+  name text not null,
+  month text not null default to_char(current_date, 'FMMonth YYYY'),
+  avatar_url text default '',
+  bio text default '',
+  badge text default '',
+  created_at timestamptz default now()
+);
+
+alter table public.solid_kapanaligs enable row level security;
+drop policy if exists "Allow public read on solid_kapanaligs" on public.solid_kapanaligs;
+create policy "Allow public read on solid_kapanaligs" on public.solid_kapanaligs for select using (true);
+
+drop policy if exists "Allow insert on solid_kapanaligs" on public.solid_kapanaligs;
+create policy "Allow insert on solid_kapanaligs" on public.solid_kapanaligs for insert with check (true);
+
+drop policy if exists "Allow update on solid_kapanaligs" on public.solid_kapanaligs;
+create policy "Allow update on solid_kapanaligs" on public.solid_kapanaligs for update using (true);
+
+drop policy if exists "Allow delete on solid_kapanaligs" on public.solid_kapanaligs;
+create policy "Allow delete on solid_kapanaligs" on public.solid_kapanaligs for delete using (true);
+
 -- Reload Supabase Schema Cache
 notify pgrst, 'reload schema';

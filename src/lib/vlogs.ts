@@ -155,18 +155,29 @@ export function useVlogs() {
   };
 }
 
+const AUTH_EVENT = "amen-auth-event";
+
 export function useAdmin() {
-  const [admin, setAdmin] = useState(false);
+  const [admin, setAdmin] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem(AUTH) === "1";
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const isLocalAdmin = localStorage.getItem(AUTH) === "1";
-    setAdmin(isLocalAdmin);
+    const syncAuth = () => {
+      setAdmin(localStorage.getItem(AUTH) === "1");
+    };
+
+    // Listen for instant in-tab auth changes and cross-tab storage changes
+    window.addEventListener(AUTH_EVENT, syncAuth);
+    window.addEventListener("storage", syncAuth);
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         localStorage.setItem(AUTH, "1");
         setAdmin(true);
+        window.dispatchEvent(new Event(AUTH_EVENT));
       }
       setLoading(false);
     });
@@ -177,12 +188,19 @@ export function useAdmin() {
       if (session) {
         localStorage.setItem(AUTH, "1");
         setAdmin(true);
-      } else if (!isLocalAdmin) {
-        setAdmin(false);
+        window.dispatchEvent(new Event(AUTH_EVENT));
+      } else {
+        const isLocalAdmin = localStorage.getItem(AUTH) === "1";
+        if (!isLocalAdmin) {
+          setAdmin(false);
+          window.dispatchEvent(new Event(AUTH_EVENT));
+        }
       }
     });
 
     return () => {
+      window.removeEventListener(AUTH_EVENT, syncAuth);
+      window.removeEventListener("storage", syncAuth);
       subscription.unsubscribe();
     };
   }, []);
@@ -198,6 +216,7 @@ export function useAdmin() {
     if (data.session) {
       localStorage.setItem(AUTH, "1");
       setAdmin(true);
+      window.dispatchEvent(new Event(AUTH_EVENT));
     }
     return {
       success: true,
@@ -220,6 +239,7 @@ export function useAdmin() {
       if (!error && data.session) {
         localStorage.setItem(AUTH, "1");
         setAdmin(true);
+        window.dispatchEvent(new Event(AUTH_EVENT));
         return { success: true };
       }
 
@@ -231,6 +251,7 @@ export function useAdmin() {
       if (isPremade) {
         localStorage.setItem(AUTH, "1");
         setAdmin(true);
+        window.dispatchEvent(new Event(AUTH_EVENT));
         return { success: true };
       }
 
@@ -249,6 +270,7 @@ export function useAdmin() {
   const logout = async () => {
     localStorage.removeItem(AUTH);
     setAdmin(false);
+    window.dispatchEvent(new Event(AUTH_EVENT));
     try {
       await supabase.auth.signOut();
     } catch {
@@ -263,7 +285,7 @@ export function useAdmin() {
     signUp,
     logout,
   };
-}
+};
 
 export function toEmbed(url: string): string | null {
   const m = url.match(/(?:youtu\.be\/|v=|shorts\/|embed\/)([\w-]{11})/);

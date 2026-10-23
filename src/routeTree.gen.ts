@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as SolidKapanaligsRouteImport } from './routes/solid-kapanaligs'
 import { Route as VlogsRouteImport } from './routes/vlogs'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +24,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SolidKapanaligsRoute = SolidKapanaligsRouteImport.update({
+  id: '/solid-kapanaligs',
+  path: '/solid-kapanaligs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VlogsRoute = VlogsRouteImport.update({
   id: '/vlogs',
   path: '/vlogs',
@@ -32,30 +38,34 @@ const VlogsRoute = VlogsRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/solid-kapanaligs': typeof SolidKapanaligsRoute
   '/vlogs': typeof VlogsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/solid-kapanaligs': typeof SolidKapanaligsRoute
   '/vlogs': typeof VlogsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/solid-kapanaligs': typeof SolidKapanaligsRoute
   '/vlogs': typeof VlogsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/vlogs'
+  fullPaths: '/' | '/login' | '/solid-kapanaligs' | '/vlogs'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/vlogs'
-  id: '__root__' | '/' | '/login' | '/vlogs'
+  to: '/' | '/login' | '/solid-kapanaligs' | '/vlogs'
+  id: '__root__' | '/' | '/login' | '/solid-kapanaligs' | '/vlogs'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
+  SolidKapanaligsRoute: typeof SolidKapanaligsRoute
   VlogsRoute: typeof VlogsRoute
 }
 
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/solid-kapanaligs': {
+      id: '/solid-kapanaligs'
+      path: '/solid-kapanaligs'
+      fullPath: '/solid-kapanaligs'
+      preLoaderRoute: typeof SolidKapanaligsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vlogs': {
       id: '/vlogs'
       path: '/vlogs'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
+  SolidKapanaligsRoute: SolidKapanaligsRoute,
   VlogsRoute: VlogsRoute,
 }
 export const routeTree = rootRouteImport

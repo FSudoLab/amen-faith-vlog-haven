@@ -18,17 +18,25 @@ export function SiteHeader() {
         <Link to="/" className="flex items-center">
           <img src={logo} alt="AMEN - Arts of Matt Estrella Network" className="h-12 w-auto object-contain" />
         </Link>
-        <nav className="flex items-center gap-2 font-display text-sm uppercase tracking-wide">
-          <Link to="/" className="rounded-full px-4 py-2 hover:bg-gold-soft" activeOptions={{ exact: true }} activeProps={{ className: "bg-gold" }}>
+        <nav className="flex items-center gap-1.5 sm:gap-2 font-display text-xs sm:text-sm uppercase tracking-wide">
+          <Link to="/" className="rounded-full px-3 sm:px-4 py-2 hover:bg-gold-soft transition" activeOptions={{ exact: true }} activeProps={{ className: "bg-gold font-bold shadow-xs" }}>
             Home
           </Link>
-          <Link to="/vlogs" className="rounded-full px-4 py-2 hover:bg-gold-soft" activeProps={{ className: "bg-gold" }}>
+          <Link to="/vlogs" className="rounded-full px-3 sm:px-4 py-2 hover:bg-gold-soft transition" activeProps={{ className: "bg-gold font-bold shadow-xs" }}>
             Vlogs
           </Link>
+          <Link to="/solid-kapanaligs" className="rounded-full px-3 sm:px-4 py-2 hover:bg-gold-soft transition" activeProps={{ className: "bg-gold font-bold shadow-xs" }}>
+            Solid Kapanaligs
+          </Link>
           {admin && (
-            <button onClick={handleLogout} className="rounded-full bg-primary px-4 py-2 uppercase text-primary-foreground">
-              Logout
-            </button>
+            <div className="flex items-center gap-1.5 ml-1">
+              <Link to="/login" className="rounded-full bg-secondary/80 px-3 sm:px-3.5 py-1.5 text-xs font-semibold text-secondary-foreground hover:bg-secondary transition" activeProps={{ className: "bg-secondary ring-2 ring-gold" }}>
+                Admin
+              </Link>
+              <button onClick={handleLogout} className="rounded-full bg-primary px-3 sm:px-3.5 py-1.5 text-xs text-primary-foreground hover:opacity-90 transition">
+                Logout
+              </button>
+            </div>
           )}
         </nav>
       </div>
