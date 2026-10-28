@@ -42,10 +42,13 @@ function Index() {
         <div className="rays pointer-events-none absolute inset-0" />
         <div className="relative mx-auto grid w-full max-w-6xl flex-1 grid-cols-1 items-end gap-10 px-5 pt-12 md:grid-cols-[1fr_1.1fr] md:gap-6 md:pt-16">
           <div className="max-w-xl self-center text-left">
-            <p className="font-display text-3xl leading-snug md:text-4xl">
+            <h1 className="font-display text-3xl leading-snug md:text-4xl lg:text-5xl">
+              Hi, Mga Kapanalig! Welcome to the AMEN Kapanalig Website!
+            </h1>
+            <p className="mt-4 text-base md:text-lg font-medium text-foreground/90">
               “Para sa mas malawak na misyon ng bawat Kapanalig sa karangalan ng Poong Maykapal”
             </p>
-            <p className="mt-4 text-muted-foreground">
+            <p className="mt-1 text-sm md:text-base text-muted-foreground">
               For the greater mission of every Fellow Believer in the honor and glory of the Almighty God
             </p>
             <Link to="/vlogs" className="mt-8 inline-block rounded-full bg-primary px-8 py-4 font-display uppercase text-primary-foreground shadow-holy">
